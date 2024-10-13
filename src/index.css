@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    background: #EBE9E1;
+    font-family: "Outfit", sans-serif;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.customshadow {
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+select {
+    appearance: none;
+}
