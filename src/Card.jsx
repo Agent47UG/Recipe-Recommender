@@ -16,7 +16,7 @@ function Card(props) {
                 variants={fadeIn("up", props.keys * 0.1, true)}
                 initial="hidden"
                 whileInView={"show"}
-                viewport={{ once: true, amount: 0.7 }}
+                viewport={{ once: true, amount: 0.2 }}
 
                 className="bg-primary customshadow h-98 w-80 rounded-lg p-4 flex flex-col justify-between">
                 <span className="text-3xl font-medium text-secondary  ">{props.recipeName}</span>
