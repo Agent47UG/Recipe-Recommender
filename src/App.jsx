@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import Card from './Card';
 import Nav from './Nav';
 import Tagline from './Tagline';
@@ -11,67 +11,132 @@ import loader from './assets/loader.svg'
 
 function App() {
   const [question, setQuestion] = useState("");
-  const [isloading, setLoading] = useState("");
+  const [loadingMessage, setLoadingMessage] = useState("");
   const [quantity, setQuantity] = useState(5);
-  const [recipies, setRecipies] = useState({});
+  const [recipes, setRecipes] = useState([]);
+  const googleAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMIN_API_KEY);
+  const preferredModels = ['gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-3.1-flash-lite'];
+  const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
-  const prompt = `${quantity} recipes that fits the description${question}using this JSON schema:
+  const responseSchema = {
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        recipeName: { type: 'string' },
+        ingredients: { type: 'array', items: { type: 'string' } },
+        steps: { type: 'array', items: { type: 'string' } },
+        cuisine: { type: 'string' },
+        time_required: { type: 'number' },
+        taste_rating: { type: 'number' },
+        calories: { type: 'number' },
+        serving: { type: 'number' },
+      },
+      required: [
+        'recipeName',
+        'ingredients',
+        'steps',
+        'cuisine',
+        'time_required',
+        'taste_rating',
+        'calories',
+        'serving',
+      ],
+    },
+  };
 
-Recipe = {"recipeName": string,"ingredients": Array,"steps":Array,":cuisine":string,"time_required" : number,"taste_rating":number,"calories":number,"serving":number}
-add quantity required for specified serving in the ingredients
-dont include next line formatting
-Return: Array<Recipe> without '''json at start dont add addtionial Details about recipe name, add quantity required for specified serving in the ingredients`;
+  const prompt = `Generate exactly ${quantity} recipes matching this description: ${question}. Return only raw JSON and nothing else.
 
+Output schema:
+[
+  {
+    "recipeName": "string",
+    "ingredients": ["string"],
+    "steps": ["string"],
+    "cuisine": "string",
+    "time_required": number,
+    "taste_rating": number,
+    "calories": number,
+    "serving": number
+  }
+]
 
-
+Do not include markdown, explanation, or extra text.`;
 
   async function generateAnswer() {
-    setLoading("Generating Recipes...");
-    const reponse = await axios({
-      url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + import.meta.env.VITE_GEMIN_API_KEY,
-      method: 'post',
-      data: {
-        contents:
-          [
-            {
-              parts: [{ text: prompt }]
+    setLoadingMessage("Generating Recipes...");
+    let lastError = null;
+
+    for (const modelName of preferredModels) {
+      const modelInstance = googleAI.getGenerativeModel({ model: modelName });
+
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const result = await modelInstance.generateContent({
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: 'application/json',
+              responseSchema,
             },
-          ],
-      },
-    });
+          });
 
-    try {
-      let response = reponse['data']['candidates'][0]['content']['parts'][0]['text'];
-      response = response.replace(/^```json/, '');
-      response = response.replace(/```$/, '');
-      console.log(response)
-      const recipe = JSON.parse(response);
-      console.log(recipe[0])
-      setRecipies(recipe)
-      setLoading("")
+          const responseText = result.response.text();
+          const recipeList = JSON.parse(responseText);
+          setRecipes(recipeList);
+          setLoadingMessage("");
+          return;
+        } catch (e) {
+          lastError = e;
+          const status = e?.status ?? e?.response?.status ?? null;
+
+          // Retry only on server busy / 503 errors with exponential backoff
+          if (status === 503 || (e?.message && /\b503\b/.test(e.message))) {
+            const delay = Math.pow(2, attempt) * 500; // 1s, 2s, 4s roughly
+            await sleep(delay);
+            continue; // retry same model
+          }
+
+          // For other recoverable server errors (5xx), try a short backoff
+          if (status >= 500 && status < 600) {
+            const delay = 1000;
+            await sleep(delay);
+            continue;
+          }
+
+          // For client errors or unknown issues, stop retrying this model
+          break;
+        }
+      }
+
+      // try next model in preferredModels list
     }
-    catch (e) {
-      setLoading("An Error Occurred..Please try again! ☹")
-      console.log(e);
-    }
+
+    console.error('All attempts failed:', lastError);
+    setLoadingMessage('Service temporarily unavailable — please try again later.');
   }
 
-
-  const getRecipie = (count) => {
-    const arr = []
-    for (let i = 0; i < count; i++) {
-      arr.push(<Card keys={i} recipeName={recipies[i]["recipeName"]} ingredients={recipies[i]["ingredients"]} steps={recipies[i]["steps"]} tasteRating={recipies[i]["taste_rating"]} serving={recipies[i]["serving"]} calories={recipies[i]["calories"]} timeRequired={recipies[i]["time_required"]} cuisine={recipies[i]["cuisine"]}></Card>)
-    }
-    return arr;
-  }
+  const getRecipeCards = () =>
+    recipes.map((recipe, index) => (
+      <Card
+        key={index}
+        recipeName={recipe.recipeName}
+        ingredients={recipe.ingredients}
+        steps={recipe.steps}
+        tasteRating={recipe.taste_rating}
+        serving={recipe.serving}
+        calories={recipe.calories}
+        timeRequired={recipe.time_required}
+        cuisine={recipe.cuisine}
+      />
+    ));
 
   const onQuestionChange = (newQuestion) => {
-    setQuestion(newQuestion)
-  }
+    setQuestion(newQuestion);
+  };
 
   const onQuantityChange = (newQuantity) => {
-    setQuantity(newQuantity)
-  }
+    setQuantity(newQuantity);
+  };
 
 
 
@@ -84,15 +149,15 @@ Return: Array<Recipe> without '''json at start dont add addtionial Details about
       <InputField generateRecipe={generateAnswer} onQuestionChange={onQuestionChange} quantity={quantity} onQuantityChange={onQuantityChange} />
 
       <main className='flex-grow'>
-        <p className='text-secondary font-medium text-center text-lg mt-5'>{isloading}</p>
-        {isloading &&
+        <p className='text-secondary font-medium text-center text-lg mt-5'>{loadingMessage}</p>
+        {loadingMessage &&
           <div className='flex justify-center'>
             <img src={loader} className='w-10'></img>
           </div>
         }
 
-        <div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-y-5 mt-10 justify-items-center'>
-          {isloading ? "" : getRecipie(Object.keys(recipies).length)}
+        <div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-y-5 mt-10 justify-items-center mx-3'>
+          {loadingMessage ? "" : getRecipeCards()}
         </div>
       </main>
 

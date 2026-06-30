@@ -37,7 +37,6 @@ function RecipePopUp(props) {
                             {props.timeRequired + " Minutes"}
                         </div>
                     </div>
-
                     <div>
                         <div className="text-2xl font-medium text-secondary  ">Serving</div>
 

@@ -21,7 +21,7 @@ function Footer() {
                     <a href="https://github.com/Agent47UG" target="_blank">
                         <i className="ri-github-fill "></i>
                     </a>
-                    <a href="https://www.ujwalg.tech/" target="_blank">
+                    <a href="https://www.ujwal.site/" target="_blank">
                         <i className="ri-code-s-slash-line text-xl"></i>
                     </a>
                     <a href="https://www.linkedin.com/in/ujwal-ghodeswar-268209241" target="_blank">
