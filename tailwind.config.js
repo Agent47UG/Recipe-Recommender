@@ -8,34 +8,38 @@ export default {
   theme: {
     screens: {
       'sm': '640px',
-      // => @media (min-width: 640px) { ... }
-
       'md': '768px',
-      // => @media (min-width: 768px) { ... }
-
       'lg': '1024px',
-      // => @media (min-width: 1024px) { ... }
-
       'xl': '1320px',
-
       '2xl': '1660px',
     },
-
     extend: {
       fontFamily: {
-        roboto: ['"Roboto Condensed"']
+        display: ['"Anton"', 'Impact', 'sans-serif'],
+        serif: ['"Anton"', 'Impact', 'sans-serif'],
+        editorial: ['"Anton"', 'Impact', 'sans-serif'],
+        hand: ['"Caveat"', 'cursive'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        mono: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        roboto: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
       },
-
       colors: {
-        primary: '#EBE9E1',
-        darkprimary: '#E8E6D0',
-        secondary: '#E43D12',
+        primary: '#FBEAD2',
+        surface: '#FFF6E8',
+        darkprimary: '#F2DEC1',
+        secondary: '#EE3E31',
+        sunny: '#F9C835',
+        herb: '#23A455',
+        peach: '#FDE0C2',
+        ink: '#221C18',
+        umber: '#52453C',
+        stone: '#7E6F63',
+        sage: '#23A455',
         ternary: '#FFA2B6',
-        onprimary: '#EFB11D',
-        grey: '#999999'
+        onprimary: '#F9C835',
+        grey: '#7E6F63',
       },
     },
   },
   plugins: [],
 }
-

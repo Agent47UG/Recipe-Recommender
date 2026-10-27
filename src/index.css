@@ -3,18 +3,366 @@
 @tailwind utilities;
 
 :root {
-    background: #EBE9E1;
-    font-family: "Outfit", sans-serif;
+  /* Inspired Warm Cream & Bold Chili Red Palette */
+  --bg-primary: #FBEAD2;       /* Warm butter-vanilla cream canvas */
+  --bg-surface: #FFF6E8;       /* Crisp warm ivory card surface */
+  --bg-elevated: #F2DEC1;      /* Toasted bisque accent surface */
+  --bg-obsidian: #221C18;      /* Deep roasted espresso */
+
+  /* Culinary Text Hierarchy */
+  --text-primary: #221C18;     /* Rich espresso ink */
+  --text-secondary: #52453C;   /* Warm roasted umber */
+  --text-tertiary: #7E6F63;    /* Muted warm stone */
+  --text-disabled: #B3A293;
+
+  /* Vibrant Food Brand Accents */
+  --accent: #EE3E31;           /* Bold Pop Chili Red */
+  --accent-hover: #D62F22;
+  --accent-sunny: #F9C835;     /* Sunny Mustard Yellow Badge */
+  --accent-herb: #23A455;      /* Fresh Garden Green Badge */
+  --accent-peach: #FDE0C2;     /* Warm Peach Badge */
+  --accent-sage: #3B6950;
+
+  /* Hairline Borders */
+  --border: rgba(34, 28, 24, 0.09);
+  --border-strong: rgba(34, 28, 24, 0.16);
+
+  /* Typography System */
+  --font-hero: "Anton", Impact, sans-serif;
+  --font-cursive: "Dancing Script", "Pacifico", cursive;
+  --font-display: "DM Serif Display", Georgia, serif;
+  --font-editorial: "Newsreader", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+
+  /* Fluid Clamp Typography Scale */
+  --text-display: clamp(3.1rem, 7vw + 0.8rem, 6.2rem);
+  --text-h1: clamp(2.1rem, 3.5vw + 0.75rem, 3.5rem);
+  --text-h2: clamp(1.6rem, 2.2vw + 0.5rem, 2.4rem);
+  --text-h3: clamp(1.25rem, 1.3vw + 0.5rem, 1.55rem);
+  --text-body-lg: clamp(1.05rem, 0.45vw + 0.85rem, 1.2rem);
+  --text-body: clamp(0.95rem, 0.25vw + 0.85rem, 1.05rem);
+
+  /* Easing Library */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-::-webkit-scrollbar {
-    display: none;
+html {
+  scroll-behavior: smooth;
 }
 
-.customshadow {
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  letter-spacing: -0.011em;
+}
+
+::selection {
+  background: rgba(238, 62, 49, 0.2);
+  color: var(--text-primary);
+}
+
+/* Bold Condensed Uppercase Hero Display ("MAKE THE BEST WITH YOUR INGREDIENTS") */
+.display-hero {
+  font-family: var(--font-hero);
+  font-weight: 400;
+  font-size: var(--text-display);
+  line-height: 0.94;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-wrap: balance;
+}
+
+/* True Flowing Cursive Typography for "Yummy!!" */
+.font-cursive {
+  font-family: var(--font-cursive) !important;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Restored Classic Editorial Card Typography */
+.font-editorial {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.font-editorial-italic {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.h1-editorial {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-h1);
+  line-height: 1.08;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.h2-editorial {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-h2);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+.dish-title-red {
+  font-family: var(--font-hero);
+  font-weight: 400;
+  letter-spacing: 0.015em;
+  line-height: 1.02;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.body-editorial {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-lg);
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.overline-label {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.tabular-data {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Surfaces & Restored Old Card Styles */
+.editorial-border {
+  border-color: var(--border);
+}
+
+.bg-surface {
+  background-color: #FFF6E8 !important;
+}
+
+.text-surface {
+  color: #FFF6E8 !important;
+}
+
+.modal-surface {
+  background-color: #FFF6E8;
+  border: 1.5px solid rgba(34, 28, 24, 0.14);
+  box-shadow: 0 28px 70px -12px rgba(20, 14, 10, 0.45);
+}
+
+.modal-card-item {
+  background-color: #FBEAD2;
+  border: 1px solid rgba(34, 28, 24, 0.1);
+}
+
+.modal-backdrop {
+  background-color: rgba(24, 18, 14, 0.72);
+}
+
+/* High-Contrast Interactive Chips & Controls */
+.dishes-selector-box {
+  background-color: #EAD2B0;
+  border: 1.5px solid rgba(34, 28, 24, 0.22);
+}
+
+.pantry-chip {
+  background-color: #FFF6E8;
+  color: #221C18;
+  border: 1.5px solid rgba(34, 28, 24, 0.16);
+  transition: all 0.2s var(--ease-out);
+}
+
+.pantry-chip:hover {
+  background-color: #F2DEC1;
+  border-color: rgba(34, 28, 24, 0.32);
+}
+
+.pantry-chip-active {
+  background-color: #1B7A43 !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #145E33 !important;
+  box-shadow: 0 3px 10px rgba(27, 122, 67, 0.28);
+}
+
+.hot-chip {
+  background-color: #FAD8B4;
+  color: #C8281C;
+  border: 1.5px solid rgba(238, 62, 49, 0.3);
+  transition: all 0.2s var(--ease-out);
+}
+
+.hot-chip:hover {
+  background-color: #EE3E31 !important;
+  color: #FFFFFF !important;
+  border-color: #EE3E31 !important;
+}
+
+/* 3-Icon Wave Loading Animation */
+@keyframes loaderWave {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.08);
+  }
+}
+
+.wave-icon-1 {
+  animation: loaderWave 1.05s ease-in-out infinite;
+  animation-delay: 0ms;
+}
+
+.wave-icon-2 {
+  animation: loaderWave 1.05s ease-in-out infinite;
+  animation-delay: 160ms;
+}
+
+.wave-icon-3 {
+  animation: loaderWave 1.05s ease-in-out infinite;
+  animation-delay: 320ms;
+}
+
+.editorial-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow:
+    0 2px 4px rgba(34, 28, 24, 0.03),
+    0 12px 32px -8px rgba(34, 28, 24, 0.06);
+  transition:
+    transform 0.45s var(--ease-out),
+    box-shadow 0.45s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+
+@media (hover: hover) {
+  .editorial-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(238, 62, 49, 0.35);
+    box-shadow:
+      0 6px 16px rgba(34, 28, 24, 0.05),
+      0 24px 48px -12px rgba(34, 28, 24, 0.12);
+  }
+}
+
+/* Button Slide-Fill Micro-Interaction */
+.btn-awwwards {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--accent);
+  color: var(--bg-surface);
+  transition: transform 0.25s var(--ease-out), color 0.3s var(--ease-out);
+}
+
+.btn-awwwards::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--text-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s var(--ease-out);
+  z-index: 0;
+}
+
+@media (hover: hover) {
+  .btn-awwwards:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+.btn-awwwards > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Input Animated Focus Line */
+.command-bar-wrapper {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-strong);
+  box-shadow: 0 10px 30px -10px rgba(34, 28, 24, 0.07);
+  transition:
+    border-color 0.3s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+
+.command-bar-wrapper:focus-within {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 4px rgba(238, 62, 49, 0.12),
+    0 20px 44px -12px rgba(34, 28, 24, 0.12);
+}
+
+/* Warm Cream Canvas Glow */
+.ambient-editorial-bg {
+  background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(ellipse 60% 45% at 15% 12%, rgba(238, 62, 49, 0.045), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 18%, rgba(249, 200, 53, 0.09), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 90%, rgba(35, 164, 85, 0.04), transparent 65%);
 }
 
 select {
-    appearance: none;
+  appearance: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(34, 28, 24, 0.18);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(238, 62, 49, 0.6);
+}
+
+@media (pointer: fine) {
+  html,
+  body,
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
